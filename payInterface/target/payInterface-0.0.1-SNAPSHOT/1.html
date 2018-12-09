@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Untitled Document</title>
+	<link rel="stylesheet" type="text/css" href="resource/css/css.css">
+	<link rel="stylesheet" type="text/css" href="resource/css/reveal.css">
+
+	<script type="text/javascript" src="resource/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="resource/js/jquery.reveal.js"></script>
+	<script type="text/javascript" src="resource/js/layer/layer.js"></script>
+	<!-- <script type="text/javascript" src="resource/js/buy.js"></script> -->
+</head>
+
+<body>
+<div class="content">
+	<div class="t">
+    <a class="close" href="#">&times;</a>
+    </div>
+    
+  <div class="b"></div>
+	<div class="hh1"></div>
+	<table class="dis tab1" border="0" cellpadding="0" cellspacing="0">
+	  <tbody>
+		<tr>
+		  <td width="190px"><input class="put1"  name="textfield" type="text" value="请输入孩子的姓名" onfocus="if (value =='请输入孩子的姓名'){value =''}" onblur="if (value ==''){value='请输入孩子的姓名'}" ></td>
+		  <td colspan="2">
+		  <select class="srk sel" name="" > 
+			<option value="">请选择孩子的年级</option> 
+			<option value="1">幼儿园</option> 
+			<option value="2">一年级</option> 
+			<option value="3">二年级</option> 
+			<option value="4">三年级</option> 
+			<option value="5">四年级</option> 
+			<option value="6">五年级</option> 
+			<option value="7">六年级</option> 
+		   </select></td>
+		</tr>
+		<tr>
+		  <td><input class="put1" name="textfield" type="text"
+						value="请输入您的手机号" onfocus="if (value =='请输入您的手机号'){value =''}"
+						onblur="if (value ==''){value='请输入您的手机号'}"></td>
+		  <td width="100px"><input class="put2" name="textfield" type="text" value="输入验证码" onfocus="if (value =='输入验证码'){value =''}" onblur="if (value ==''){value='输入验证码'}"></td>
+			<td width="100px"><a href="#" class="dis yzm-btn">获取验证码</a></td>
+		</tr>
+	  </tbody>
+	</table>
+    
+	<p class="p1">原价<b class="pur hx">1399元</b>，暑期特价<b class="pur">148元</b></p>
+	
+	<a class="dis btn" href="#" data-reveal-id="myModal"  id="pay_submit" ><img src="resource/images/btn.jpg" width="173px" height="70px"></a>
+	
+	<!-- 弹窗 -->
+	
+	<div id="myModal" class="reveal-modal">
+		<a class="close-reveal-modal">&#215;</a>
+		<h1 class="tc-h1">微信扫码支付</h1>
+		
+		<p class="qian red"><span>支付金额</span><br>￥148.00 元</p>
+		
+		<img class="dis" src="http://localhost:8080/payInterface/wechat/requestCode.do?productId=wx_51talk_001" width="190px" height="190px">
+		
+		<a href="#" class="dis btn2">若微信支付已完成，请点击！</a>
+	</div>
+	
+<!-- 	弹窗 end  -->
+	
+	
+	<!-- 弹窗2 -->
+    <!--
+	<div id="myModal" class="reveal-modal">
+		<a class="close-reveal-modal tc2x">&#215;</a>
+		
+		<img class="dis right" src="images/right_03.jpg" width="61" height="61">
+		<p class="qian">支付成功！</p>
+		
+		<table class="dis tc-tab" border="0" cellpadding="0" cellspacing="0">
+		  <tbody>
+			<tr>
+			  <td align="right">订单号：</td>
+			  <td>1234567889999</td>
+			</tr>
+			<tr>
+			  <td align="right">支付金额：</td>
+			  <td>￥199.00元</td>
+			</tr>
+			<tr>
+			  <td align="right">支付方式：</td>
+			  <td>微信支付</td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		
+		<a href="#" class="dis p22">查看51Talk14天在线口语强化班详情</a>
+	</div>
+    -->
+	<!-- 弹窗2 end-->
+
+</div>
+</body>
+</html>

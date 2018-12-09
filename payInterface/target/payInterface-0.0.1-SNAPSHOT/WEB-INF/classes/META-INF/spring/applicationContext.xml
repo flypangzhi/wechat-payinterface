@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd" >
+	
+
+<!-- 配置自动扫描的包 -->
+	<context:component-scan base-package="com.aotain.payInterface"></context:component-scan>
+	<!-- 配置数据源 -->
+	<!-- 导入资源文件 -->
+	<context:property-placeholder location="classpath:conf/jdbc.properties"/>
+		
+	<!-- <context:component-scan base-package="com.aotain.payInterface">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan> -->
+	
+	<!-- 配置数据源 使用的是Druid数据源 -->
+	<bean id="greenetDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- 数据库基本信息配置 -->
+		<property name="name" value="绿网数据库" />
+        <property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="0" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="3" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="0" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="60000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="33" />
+		<!-- 用来检测有效sql -->
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="60000" />
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="1800" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 监控数据库 -->
+		<property name="filters" value="mergeStat" />
+	</bean>
+	
+	
+		 <bean id="dataSource" class="com.aotain.payInterface.datasource.RoutingDataSource">  
+ 	   <property name="targetDataSources">  
+    	    <map key-type="java.lang.String">  
+    	        <entry value-ref="greenetDataSource" key="greenet"></entry>  
+     	   </map>  
+    	</property>  
+    	<property name="defaultTargetDataSource" ref="greenetDataSource"></property>      <!-- 默认使用greenetDataSource的数据源 -->
+	</bean>  
+	
+	<!-- mapper配置 -->
+	<!-- 让spring管理sqlsessionfactory 使用mybatis和spring整合包中的 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 加载mybatis的全局配置文件 -->
+		<!-- <property name="configLocation" value="classpath:resource/mybatis/SqlMapConfig.xml" /> -->
+		<!-- 加载映射文件 -->
+		<property name="mapperLocations" value="classpath:com/aotain/payInterface/mapping/*.xml" />
+	</bean>
+	<!-- 配置扫描器   扫描 所有映射接口类-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描me.gacl.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.aotain.payInterface.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+	
+		<!--自动扫描含有@Service将其注入为bean -->
+	<!-- <context:component-scan base-package="com.aotain.payInterface.service" /> -->
+	
+	
+	<!--=====================配置事务======================-->
+	<!-- 配置 Spring 的声明式事务 -->
+	<!-- 1. 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 2. 配置事务属性, 需要事务管理器 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager" >
+		<tx:attributes >
+			<!-- propagation :事务传播行为
+				  isolation :事务隔离级别 
+			 -->
+			 <!-- REQUIRED 这种事务传播行为是默认的,当一个事务方法运行调用另一个事务方法时
+			   		被调的那个方法将加入到调用方法的事务中
+			      REQUIRES_NEW 注意，这种事务传播行为, 会新起一个事务,而原调它的方法的事务会挂起
+					容易发生违反数据原子性的问题
+			   
+			   no-rollback-for 指定哪些异常不会滚
+			   rollback-for 将被触发进行回滚的 Exception(s)；以逗号分开。 
+			   read-only 该事务是否只读？默认false
+			   timeout 指定事务运行时间,以秒为单位，如果指定时间之前没执行完，强制回滚  默认-1
+		 	-->
+		   <tx:method name="get*" read-only="true"  propagation="REQUIRED" no-rollback-for="" />
+		   <tx:method name="find*" read-only="true"  propagation="REQUIRED" rollback-for="" />
+		   <tx:method name="add*" propagation="REQUIRED" isolation="DEFAULT"/>
+           <tx:method name="delete*" propagation="REQUIRED"/>
+           <tx:method name="update*" propagation="REQUIRED"/>
+           <!-- rollback-for : 异常导致回滚 -->
+		    <tx:method name="*" rollback-for="java.lang.Throwable" timeout="10"/>
+		    
+		</tx:attributes >
+	</tx:advice>
+
+	<!-- 3. 配置事务切点, 并把切点和事务属性关联起来 -->
+<!-- 	<aop:config>
+		execution(* com.luowg.*.service.*.*(..))  匹配包下，任意返回值，任意方法名，任意方法参数
+		<aop:pointcut expression="execution(* com.krk.creative.*.service.*.*(..))" 
+			id="txPointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+	 -->
+
+		
+	
+	
+</beans>

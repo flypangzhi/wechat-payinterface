@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aotain.payInterface.dao.WechatPayMapper">
+
+
+	<insert id="insertPayLog" parameterType="java.util.Map">
+		insert into
+		greenet_wechat_pay_log(logid,phone,green_isnotify,out_trade_no,wechat_requestdata,wechat_responsedata,wechat_createtime)
+		values(seq_greenet_wechat_pay_log.nextval,#{phone},#{greenIsNotify},#{outTradeNo},#{wechatReqData},#{wechatRespData},sysdate)
+	</insert>
+
+	<update id="updatePayLog" parameterType="com.aotain.payInterface.bean.WechatPayBean">
+		update
+		greenet_wechat_pay_log
+		set wechat_notify_flag = #{wechatNotifyFlag},
+		wechat_notify_responsedata = #{wechatNotifyData},
+		wechat_notify_time =sysdate
+		where out_trade_no = #{outTradeNo}
+	</update>
+	
+	<select id="selectPayUser"   parameterType="String"  resultType="String">
+	 select  phone from greenet_wechat_pay_log where  OUT_TRADE_NO = #{outTradeNo} and GREEN_ISNOTIFY = 1
+	</select>
+	
+	<update id="updateNotifyFlag"  parameterType="String">
+		update greenet_wechat_pay_log
+		set  green_notify_status = 1,
+		green_notify_time = sysdate
+		where out_trade_no = #{outTradeNo} 
+	</update>
+
+ 	<!--  配置别名后type可以简写为类名 -->
+    <resultMap type="com.aotain.payInterface.bean.WechatPayBean" id="PayResultMap">
+    	<!--  用id属性来映射主键字段 -->
+    	<!--  用result属性来映射非主键字段 -->
+    	<!-- 名字一样可以不用映射 -->
+    	<result property="outTradeNo" column="out_trade_no" />
+    	<result property="notifyFlag" column="green_notify_status" />
+    </resultMap>
+	
+</mapper>
