@@ -11,7 +11,7 @@ jar管理：maven
 
 **二、开发步骤**
 
-1、开发前请先查看文档[微信扫码支付流程](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_5)，[统一下单接口](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_1)和[设置回调接口](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_3)，对整个流程有一些认识。
+**1、开发前请先查看文档[微信扫码支付流程](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_5)，[统一下单接口](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_1)和[设置回调接口](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_3)，对整个流程有一些认识。**
 
 **2、开发过程中需要的参数如下图所示。**
 
@@ -63,7 +63,6 @@ jar管理：maven
 https://github.com/flypangzhi/wechat-payinterface
 
 备注：功能是实现了，不过还有很多地方可以优化，优化的任务就交给大家啦。
-如果有什么好的意见的话可以跟我反馈：QQ:1484772397
 
 
 参考链接
